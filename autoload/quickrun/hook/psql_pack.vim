@@ -5,13 +5,13 @@ let s:hook = {
       \   'name': 'psql_pack',
       \   'kind': 'hook',
       \   'config': {
-      \     'enabled': 0
+      \     'enable': 0
       \   }
       \ }
 
 
 function! s:hook.on_output(session, context) "{{{
-  if self.config.enabled
+  if self.config.enable
     let text      = a:context.data
     let buffer_nr = winnr('$')
 
@@ -49,7 +49,7 @@ endfunction "}}}
 
 
 function! s:hook.on_outputter_buffer_opened(session, context) "{{{
-  if self.config.enabled
+  if self.config.enable
     setlocal nonumber nowrap sidescrolloff=0
     nnoremap <buffer> <Leader>r <Nop>
 

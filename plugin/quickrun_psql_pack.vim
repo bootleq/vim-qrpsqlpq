@@ -12,7 +12,7 @@ if executable('psql')
   function! s:quickrun_sql_config() "{{{
     let g:quickrun_config['sql'] = {
           \   'outputter/buffer/into': 0,
-          \   'hook/psql_pack/enabled': 1,
+          \   'hook/psql_pack/enable': 1,
           \   'outputter/buffer/name': '[QR] %{expand("%:t")}  \@%{strftime("%T")}'
           \ }
     nmap <buffer> <Leader>r [quickrun]

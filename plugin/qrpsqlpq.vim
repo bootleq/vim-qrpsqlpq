@@ -16,9 +16,9 @@ if executable('psql')
           \   'outputter/buffer/name': '[QR] %{expand("%:t")}  \@%{strftime("%T")}'
           \ }
     nmap <buffer> <Leader>r [quickrun]
-    nnoremap <silent> <buffer> [quickrun]j :call qrpsqlpq#run('j')<CR>
-    nnoremap <silent> <buffer> [quickrun]l :call qrpsqlpq#run('l')<CR>
-    nnoremap <silent> <buffer> [quickrun]r :call qrpsqlpq#run('last')<CR>
+    nnoremap <silent> <buffer> [quickrun]j :call qrpsqlpq#run('split')<CR>
+    nnoremap <silent> <buffer> [quickrun]l :call qrpsqlpq#run('vsplit')<CR>
+    nnoremap <silent> <buffer> [quickrun]r :call qrpsqlpq#run()<CR>
   endfunction "}}}
 
   autocmd FileType sql call s:quickrun_sql_config()

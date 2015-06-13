@@ -1,7 +1,11 @@
 " Main Functions: {{{
 
-function! qrpsqlpq#run(method) "{{{
-  let method = a:method == 'last' ? get(s:, 'qrpsqlpq_last_run_method', 'j') : a:method
+function! qrpsqlpq#run(...) "{{{
+  let method = a:0 ? a:1 : 'last'
+  if method == 'last'
+    let method = get(s:, 'qrpsqlpq_last_run_method', 'split')
+  endif
+
   let b:qrpsqlpq_db = get(b:, 'qrpsqlpq_db', '')
   let split  = ''
   let cmdopt = ''
@@ -23,10 +27,10 @@ function! qrpsqlpq#run(method) "{{{
 
   call qrpsqlpq#quit_winodws_by_filetype('^quickrun') " close previous output buffer
 
-  if method == 'j'
+  if method == 'split'
     let s:qrpsqlpq_last_run_method = method
     let split = 'silent botright 16split'
-  elseif method == 'l'
+  elseif method == 'vsplit'
     let s:qrpsqlpq_last_run_method = method
     let split = 'silent botright 78vsplit'
     let cmdopt .= ' -P columns=78'
@@ -38,7 +42,7 @@ function! qrpsqlpq#run(method) "{{{
         \   "QuickRun -cmdopt '%s' -outputter/buffer/split '%s' %s",
         \   cmdopt,
         \   split,
-        \   method == 'l' ? '-hook/qrpsqlpq/output_expanded auto' : ''
+        \   method == 'vsplit' ? '-hook/qrpsqlpq/output_expanded auto' : ''
         \ )
 endfunction  "}}}
 

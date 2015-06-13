@@ -6,24 +6,16 @@ function! qrpsqlpq#run(...) "{{{
     let method = get(s:, 'qrpsqlpq_last_run_method', 'split')
   endif
 
-  let b:qrpsqlpq_db = get(b:, 'qrpsqlpq_db', '')
-  let split  = ''
-  let cmdopt = ''
+  let db_name = s:get_db_name()
+  let split   = ''
+  let cmdopt  = ''
 
-  if empty(b:qrpsqlpq_db)
-    if !exists('b:rails_root')
-      call RailsDetect()
-    endif
-    if exists('b:rails_root')
-      let b:qrpsqlpq_db = rails#app().db_config('development').database
-    endif
-  endif
-  if empty(b:qrpsqlpq_db)
+  if empty(db_name)
     echohl WarningMsg | echomsg "Missing database config." | echohl None
     return
   endif
 
-  let cmdopt = '-d ' . b:qrpsqlpq_db . ' -P pager=off -P format=wrapped -P expanded=auto'
+  let cmdopt = '-d ' . db_name . ' -P pager=off -P format=wrapped -P expanded=auto'
 
   call qrpsqlpq#quit_winodws_by_filetype('^quickrun') " close previous output buffer
 
@@ -50,6 +42,28 @@ endfunction  "}}}
 
 
 " Utils: {{{
+
+function! s:get_db_name() "{{{
+  let name = get(
+        \   b:,
+        \   'qrpsqlpq_db_name',
+        \   get(g:, 'qrpsqlpq_db_name', '')
+        \ )
+
+  if empty(name)
+    if exists('*RailsDetect')
+      if !exists('b:rails_root')
+        call RailsDetect()
+      endif
+      if exists('b:rails_root')
+        let name = rails#app().db_config('development').database
+      endif
+    endif
+  endif
+
+  return name
+endfunction "}}}
+
 
 function! qrpsqlpq#quit_winodws_by_filetype(...) "{{{
   let win_count = winnr('$')

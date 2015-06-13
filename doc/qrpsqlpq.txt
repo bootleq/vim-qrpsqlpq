@@ -11,8 +11,17 @@ CONTENTS                                                   *qrpsqlpq-contents*
 ==============================================================================
 USAGE                                                         *qrpsqlpq-usage*
 
-No default mappings were set, please see |qrpsqlpq-examples| for mapping
-setting.
+Connect to database ~
+
+  Currently only "-d dbname" is configurable.
+
+  Set |b:qrpsqlpq_db_name| or |g:qrpsqlpq_db_name|, or qrpsqlpq will try using
+  rails.vim detect your development setting.
+
+Key mappings ~
+
+  No default mappings were set, please see |qrpsqlpq-examples| for mapping
+  setting.
 
 ==============================================================================
 CONFIGURATION                                         *qrpsqlpq-configuration*
@@ -21,9 +30,17 @@ CONFIGURATION                                         *qrpsqlpq-configuration*
 General options                                     *qrpsqlpq-general-options*
 
                                                            *g:loaded_qrpsqlpq*
-g:loaded_qrpsqlpq            (default: none) ~
+g:loaded_qrpsqlpq   (default: none) ~
 
   Set to 1 to prevent this plugin from being loaded.
+                                                          *b:qrpsqlpq_db_name*
+                                                          *g:qrpsqlpq_db_name*
+b:qrpsqlpq_db_name  (default: none) ~
+
+  Connect database name (the -d, --dbname option of psql).
+  |b:var| has higher priority than |g:var|.
+  If none is set, qrpsqlpq may try detect your Rails development setting with
+  rails.vim plugin.
 
 ------------------------------------------------------------------------------
 Configuration examples:                             *qrpsqlpq-config-examples*

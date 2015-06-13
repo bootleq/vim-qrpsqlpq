@@ -5,7 +5,8 @@ let s:hook = {
       \   'name': 'psql_pack',
       \   'kind': 'hook',
       \   'config': {
-      \     'enable': 0
+      \     'enable': 0,
+      \     'output_expanded': 'off'
       \   }
       \ }
 
@@ -15,7 +16,7 @@ function! s:hook.on_output(session, context) "{{{
     let text      = a:context.data
     let buffer_nr = winnr('$')
 
-    if get(t:, 'quickrun_psql_expanded_format')
+    if get(self.config, 'output_expanded') != 'off'
       " Add blank line between records
       " Prefix padding to each column
       let title_pattern = '-\[ RECORD \d\+ \]-[^\n]\+'
@@ -55,7 +56,7 @@ function! s:hook.on_outputter_buffer_opened(session, context) "{{{
 
     command! -buffer PGExplanTimeFormat call <SID>postgres_explan_time_format()
 
-    if get(t:, 'quickrun_psql_expanded_format')
+    if get(self.config, 'output_expanded') != 'off'
       augroup quickrun_psql_pack_augroup
         autocmd! Syntax <buffer> call quickrun_psql_pack#quickrun_sql_after_output_syntax()
       augroup END

@@ -51,18 +51,16 @@ if executable('psql')
       let s:quickrun_sql_run_last_method = method
       let split = 'silent botright 78vsplit'
       let cmdopt .= ' -P columns=78'
-      let t:quickrun_psql_expanded_format = 1 " NOTE: didn't detect really output with expanded format
     else
       echohl WarningMsg | echomsg "Unknown quickrun helper run method." | echohl None
     endif
 
     execute printf(
-          \   "QuickRun -cmdopt '%s' -outputter/buffer/split '%s'",
+          \   "QuickRun -cmdopt '%s' -outputter/buffer/split '%s' %s",
           \   cmdopt,
-          \   split
+          \   split,
+          \   method == 'l' ? '-hook/psql_pack/output_expanded auto' : ''
           \ )
-
-    unlet! t:quickrun_psql_expanded_format
   endfunction "}}}
 
   autocmd FileType sql call s:quickrun_sql_config()

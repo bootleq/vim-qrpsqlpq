@@ -1,0 +1,48 @@
+*qrpsqlpq.txt*                                          quickrun psql settings
+
+==============================================================================
+CONTENTS                                                   *qrpsqlpq-contents*
+
+    Usage  ................................. |qrpsqlpq-usage|
+    Configuration  ......................... |qrpsqlpq-configuration|
+      General options  ..................... |qrpsqlpq-general-options|
+      Examples ............................. |qrpsqlpq-examples|
+
+==============================================================================
+USAGE                                                         *qrpsqlpq-usage*
+
+No default mappings were set, please see |qrpsqlpq-examples| for mapping
+setting.
+
+==============================================================================
+CONFIGURATION                                         *qrpsqlpq-configuration*
+
+------------------------------------------------------------------------------
+General options                                     *qrpsqlpq-general-options*
+
+                                                           *g:loaded_qrpsqlpq*
+g:loaded_qrpsqlpq            (default: none) ~
+
+  Set to 1 to prevent this plugin from being loaded.
+
+------------------------------------------------------------------------------
+Configuration examples:                             *qrpsqlpq-config-examples*
+
+Key mappings, only on "sql" filetype, with:
+
+    {lhs}          {function} ~
+    ----------     ------------------------------------------- ~
+    <Leader>rj     output psql result to split window
+    <Leader>rl     output psql result to vertical split window
+    <Leader>rr     output with last used split method
+>
+    function! s:init_qrpsqlpq()
+      nmap <buffer> <Leader>r [qrpsqlpq]
+      nnoremap <silent> <buffer> [qrpsqlpq]j :call qrpsqlpq#run('split')<CR>
+      nnoremap <silent> <buffer> [qrpsqlpq]l :call qrpsqlpq#run('vsplit')<CR>
+      nnoremap <silent> <buffer> [qrpsqlpq]r :call qrpsqlpq#run()<CR>
+    endfunction
+    autocmd FileType sql call s:init_qrpsqlpq()
+<
+==============================================================================
+vim:tw=78:fo=tcroq2mM:et:sts=2:sw=2:ft=help:norl:

@@ -2,7 +2,7 @@ let s:save_cpo = &cpoptions
 set cpoptions&vim
 
 let s:hook = {
-      \   'name': 'psql_pack',
+      \   'name': 'qrpsqlpq',
       \   'kind': 'hook',
       \   'config': {
       \     'enable': 0,
@@ -32,15 +32,15 @@ function! s:hook.on_outputter_buffer_opened(session, context) "{{{
     " command! -buffer PGExplanTimeFormat call <SID>postgres_explan_time_format()
 
     if get(self.config, 'output_expanded') != 'off'
-      augroup quickrun_psql_pack_augroup
-        autocmd! Syntax <buffer> call quickrun_psql_pack#quickrun_sql_after_output_syntax()
+      augroup qrpsqlpq_augroup
+        autocmd! Syntax <buffer> call qrpsqlpq#after_output_syntax()
       augroup END
     endif
   endif
 endfunction "}}}
 
 
-function! quickrun#hook#psql_pack#new() abort "{{{
+function! quickrun#hook#qrpsqlpq#new() abort "{{{
   return deepcopy(s:hook)
 endfunction "}}}
 

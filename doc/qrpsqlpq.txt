@@ -11,17 +11,19 @@ CONTENTS                                                   *qrpsqlpq-contents*
 ==============================================================================
 USAGE                                                         *qrpsqlpq-usage*
 
+This plugin tries to be unobtrusive, it adds a 'sql/qrpsqlpq' quickrun type,
+and only takes effect when running quickrun with that type.
+
+You can set key mapping to start it, see |qrpsqlpq-examples| for example.
+(No default mappings were defined).
+
+
 Connect to database ~
 
   Currently only "-d dbname" is configurable.
 
   Set |b:qrpsqlpq_db_name| or |g:qrpsqlpq_db_name|, or qrpsqlpq will try using
   rails.vim detect your development setting.
-
-Key mappings ~
-
-  No default mappings were set, please see |qrpsqlpq-examples| for mapping
-  setting.
 
 ==============================================================================
 CONFIGURATION                                         *qrpsqlpq-configuration*

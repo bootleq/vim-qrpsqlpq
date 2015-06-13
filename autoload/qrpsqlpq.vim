@@ -31,7 +31,7 @@ function! qrpsqlpq#run(...) "{{{
   endif
 
   execute printf(
-        \   "QuickRun -cmdopt '%s' -outputter/buffer/split '%s' %s",
+        \   "QuickRun -type sql/qrpsqlpq -cmdopt '%s' -outputter/buffer/split '%s' %s",
         \   cmdopt,
         \   split,
         \   method == 'vsplit' ? '-hook/qrpsqlpq/output_expanded auto' : ''

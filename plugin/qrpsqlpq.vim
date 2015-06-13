@@ -8,17 +8,17 @@ set cpoptions&vim
 
 " Setup: {{{
 
-if executable('psql')
-  function! s:quickrun_sql_config() "{{{
-    let g:quickrun_config['sql'] = {
-          \   'outputter/buffer/into': 0,
-          \   'hook/qrpsqlpq/enable': 1,
-          \   'outputter/buffer/name': '[QR] %{expand("%:t")}  \@%{strftime("%T")}'
-          \ }
-  endfunction "}}}
-
-  autocmd FileType sql call s:quickrun_sql_config()
+if !exists('g:quickrun_config')
+  let g:quickrun_config = {}
 endif
+
+let g:quickrun_config['sql/qrpsqlpq'] = {
+      \   'command': 'psql',
+      \   'exec': ['%c %o -f %s'],
+      \   'outputter/buffer/into': 0,
+      \   'outputter/buffer/name': '[QR] %{expand("%:t")}  \@%{strftime("%T")}',
+      \   'hook/qrpsqlpq/enable': 1
+      \ }
 
 " }}} Setup
 

@@ -1,28 +1,28 @@
 Vim QuickRun psql Configuration Pack
 ====
 
-Some minor setting for using Vim as psql client.
+Some minor setting for using Vim as `psql` client, with [vim-quickrun][quickrun] plugin.
 
-Sorry for such an ugly name, qrpsqlpq for QuickRun PSQL PacK.
+Sorry for such an ugly name, qrpsqlpq for <b>Q</b>uick<b>R</b>un <b>PSQL</b> <b>P</b>ac<b>K</b>.
 
-This plugin tries to be unobtrusive, only adds a `sql/qrpsqlpq` type for
-quickrun, and only takes effect when running quickrun with that type.
+This plugin tries to be unobtrusive, only adds `sql/qrpsqlpq` type for
+quickrun, only takes effect when running quickrun with that type.
 
-For example: call `qrpsqlpq#run()` on a sql file.
+For example: call `qrpsqlpq#run()` on a .sql file.
 
 
 Features
 ----
 
 - Output `psql` execution result in split/vsplit buffer.
-- Format psql *expanded* output result:
+- Format psql *"expanded"* output result:
   - Blank lines between records.
   - Fold each record.
-  - Minor highlights.
+  - Minor highlight.
 - Format `EXPLAIN` output result:
   - Convert time display `cost=1.00..5.00` to `COST: 4.00`.
   - Mark bottleneck entry with `MAX` text.
-  - Minor highlights.
+  - Minor highlight.
 - Detect Rails development db name by [Rails.vim][rails.vim].
 
 

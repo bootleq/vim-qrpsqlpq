@@ -65,6 +65,11 @@ function! s:get_db_name() "{{{
 endfunction "}}}
 
 
+function! qrpsqlpq#detect_explain_output() "{{{
+  return search('\v^\s+QUERY PLAN\s*$', 'npw')
+endfunction "}}}
+
+
 function! qrpsqlpq#quit_winodws_by_filetype(...) "{{{
   let win_count = winnr('$')
   for pattern in a:000
@@ -75,13 +80,25 @@ function! qrpsqlpq#quit_winodws_by_filetype(...) "{{{
 endfunction "}}}
 
 
-function! qrpsqlpq#after_output_syntax() "{{{
-  syntax match SQL_RECORD_HEADER /\v-*\[ RECORD \d+ \].*/
-  highlight link SQL_RECORD_HEADER Title
-  setlocal foldmethod=expr foldlevel=1 foldexpr=qrpsqlpq#expanded_output_fold_level(v:lnum)
-  augroup qrpsqlpq_augroup
-    autocmd!
-  augroup END
+function! qrpsqlpq#after_output_syntax(...) "{{{
+  let context = a:0 ? a:1 : ''
+
+  if qrpsqlpq#detect_explain_output()
+    let context = 'explain'
+  endif
+
+  if context == 'expanded'
+    syntax match SQL_RECORD_HEADER /\v-*\[ RECORD \d+ \].*/
+    highlight link SQL_RECORD_HEADER Title
+    setlocal foldmethod=expr foldlevel=1 foldexpr=qrpsqlpq#expanded_output_fold_level(v:lnum)
+  elseif context == 'explain'
+    syntax match qrpsqlpqExplainCost /\v\(COST: \d+\.\d+\)/
+    syntax match qrpsqlpqExplainActual /\v\(ACTUAL: \d+\.\d+\)/
+    syntax match qrpsqlpqExplainCostDigit /\v[0-9.]+/ containedin=qrpsqlpqExplainCost contained
+    syntax match qrpsqlpqExplainActualDigit /\v[0-9.]+/ containedin=qrpsqlpqExplainActual contained
+    highlight link qrpsqlpqExplainCostDigit Statement
+    highlight link qrpsqlpqExplainActualDigit Identifier
+  endif
 endfunction "}}}
 
 

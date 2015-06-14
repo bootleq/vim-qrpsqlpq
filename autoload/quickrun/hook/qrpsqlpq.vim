@@ -27,12 +27,6 @@ function! s:hook.on_outputter_buffer_opened(session, context) "{{{
 
     " unmap <plug>(quickrun) FIXME: should not involved with this plugin
     nnoremap <buffer> <Leader>r <Nop>
-
-    if get(self.config, 'output_expanded') != 'off'
-      augroup qrpsqlpq_augroup
-        autocmd! Syntax <buffer> call qrpsqlpq#after_output_syntax()
-      augroup END
-    endif
   endif
 endfunction "}}}
 
@@ -41,10 +35,15 @@ function! s:hook.on_success(session, context) "{{{
   if self.config.enable
     call s:jump_to_output_window()
 
-    if s:detect_explain_output()
+    if qrpsqlpq#detect_explain_output()
       call s:discard_running_mark()
       call qrpsqlpq#format_explain_output()
     endif
+
+    execute printf(
+          \   'call qrpsqlpq#after_output_syntax(%s)',
+          \   (get(self.config, 'output_expanded') != 'off' ? '"expanded"' : '')
+          \ )
 
     wincmd p
   endif
@@ -90,11 +89,6 @@ function! s:format_expanded_output(context) "{{{
     call add(lines, line)
   endfor
   let a:context.data = join(lines, "\n")
-endfunction "}}}
-
-
-function! s:detect_explain_output() "{{{
-  return search('\v^\s+QUERY PLAN\s*$', 'npw')
 endfunction "}}}
 
 

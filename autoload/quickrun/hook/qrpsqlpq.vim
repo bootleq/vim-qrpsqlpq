@@ -27,15 +27,25 @@ function! s:hook.on_outputter_buffer_opened(session, context) "{{{
 
     " unmap <plug>(quickrun) FIXME: should not involved with this plugin
     nnoremap <buffer> <Leader>r <Nop>
+  endif
+endfunction "}}}
 
-    " FIXME: no implementation
-    " command! -buffer PGExplanTimeFormat call <SID>postgres_explan_time_format()
 
-    if get(self.config, 'output_expanded') != 'off'
-      augroup qrpsqlpq_augroup
-        autocmd! Syntax <buffer> call qrpsqlpq#after_output_syntax()
-      augroup END
+function! s:hook.on_success(session, context) "{{{
+  if self.config.enable
+    call s:jump_to_output_window()
+
+    if qrpsqlpq#detect_explain_output()
+      call s:discard_running_mark()
+      call qrpsqlpq#format_explain_output()
     endif
+
+    execute printf(
+          \   'call qrpsqlpq#after_output_syntax(%s)',
+          \   (get(self.config, 'output_expanded') != 'off' ? '"expanded"' : '')
+          \ )
+
+    wincmd p
   endif
 endfunction "}}}
 
@@ -79,6 +89,20 @@ function! s:format_expanded_output(context) "{{{
     call add(lines, line)
   endfor
   let a:context.data = join(lines, "\n")
+endfunction "}}}
+
+
+function! s:jump_to_output_window() abort "{{{
+  let winnr = winnr('$')
+  execute winnr . 'wincmd w'
+endfunction "}}}
+
+
+function! s:discard_running_mark() abort "{{{
+  if exists('b:quickrun_running_mark')
+    silent undo
+    unlet b:quickrun_running_mark
+  endif
 endfunction "}}}
 
 " }}} Helper Functions

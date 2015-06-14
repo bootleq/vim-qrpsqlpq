@@ -65,6 +65,11 @@ function! s:get_db_name() "{{{
 endfunction "}}}
 
 
+function! qrpsqlpq#detect_explain_output() "{{{
+  return search('\v^\s+QUERY PLAN\s*$', 'npw')
+endfunction "}}}
+
+
 function! qrpsqlpq#quit_winodws_by_filetype(...) "{{{
   let win_count = winnr('$')
   for pattern in a:000
@@ -75,13 +80,29 @@ function! qrpsqlpq#quit_winodws_by_filetype(...) "{{{
 endfunction "}}}
 
 
-function! qrpsqlpq#after_output_syntax() "{{{
-  syntax match SQL_RECORD_HEADER /\v-*\[ RECORD \d+ \].*/
-  highlight link SQL_RECORD_HEADER Title
-  setlocal foldmethod=expr foldlevel=1 foldexpr=qrpsqlpq#expanded_output_fold_level(v:lnum)
-  augroup qrpsqlpq_augroup
-    autocmd!
-  augroup END
+function! qrpsqlpq#after_output_syntax(...) "{{{
+  let context = a:0 ? a:1 : ''
+
+  if qrpsqlpq#detect_explain_output()
+    let context = 'explain'
+  endif
+
+  if context == 'expanded'
+    syntax match SQL_RECORD_HEADER /\v-*\[ RECORD \d+ \].*/
+    highlight link SQL_RECORD_HEADER Title
+    setlocal foldmethod=expr foldlevel=1 foldexpr=qrpsqlpq#expanded_output_fold_level(v:lnum)
+  elseif context == 'explain'
+    syntax match qrpsqlpqExplainCost /\v\(COST: \d+\.\d+\)/
+    syntax match qrpsqlpqExplainActual /\v\(ACTUAL: \d+\.\d+\)/
+    syntax match qrpsqlpqExplainCostDigit /\v[0-9.]+/ containedin=qrpsqlpqExplainCost contained
+    syntax match qrpsqlpqExplainActualDigit /\v[0-9.]+/ containedin=qrpsqlpqExplainActual contained
+    syntax match qrpsqlpqExplainBottleneck /<< MAX$/
+    highlight link qrpsqlpqExplainCostDigit Statement
+    highlight link qrpsqlpqExplainActualDigit Identifier
+    highlight link qrpsqlpqExplainBottleneck Error
+
+    call qrpsqlpq#search_bottleneck()
+  endif
 endfunction "}}}
 
 
@@ -94,6 +115,56 @@ function! qrpsqlpq#expanded_output_fold_level(line) "{{{
   else
     return '='
   endif
+endfunction "}}}
+
+
+function! qrpsqlpq#format_explain_output() "{{{
+  " Show SQL EXPLAIN ANALYZE time as 'time difference'
+  execute '%substitute/' .
+        \ '\v(cost|actual\_s+%(\.\n \.)?time)\=' .
+        \   '(\_[0-9. ]+)' .
+        \   'rows' .
+        \   '\_[^\)]+' .
+        \ '/\=s:explain_time_replacer()' .
+        \ '/ge'
+endfunction "}}}
+
+
+function! qrpsqlpq#search_bottleneck() "{{{
+  let lines = getline(1, line('$'))
+  let lines = filter(lines, 'v:val =~ ''\v(COST|ACTUAL): \d+\.\d+\)$''')
+  let max = 0.0
+
+  for line in lines
+    let time = str2float(matchstr(line, '\v\zs\d+\.\d+\ze\)$'))
+    if time > max
+      let max = time
+    endif
+  endfor
+
+  if max > 0
+    let pos = searchpos(
+          \   '\v(COST|ACTUAL): ' . string(max) . '\)$',
+          \   'bc'
+          \ )
+    call setpos("''", [''] + pos)
+    normal! A << MAX
+  endif
+endfunction "}}}
+
+
+function! s:explain_time_replacer() "{{{
+  let [column, time_expr] = [submatch(1), submatch(2)]
+
+  let column = matchstr(column, '\v\w+')
+  let time_expr  = substitute(time_expr,  '\v\.\n \.', '', '')  " psql might wrap long line with '.\n .'
+  let [begin, end] = split(time_expr, '\V..')
+
+  return printf(
+        \   '%s: %s',
+        \   toupper(column),
+        \   string(str2float(end) - str2float(begin))
+        \ )
 endfunction "}}}
 
 " }}} Utils

@@ -26,6 +26,20 @@ Features
 - Detect Rails development db name by [Rails.vim][rails.vim].
 
 
+Config Example
+----
+
+```vim
+function! s:init_qrpsqlpq()
+  nmap <buffer> <Leader>r [qrpsqlpq]
+  nnoremap <silent> <buffer> [qrpsqlpq]j :call qrpsqlpq#run('split')<CR>
+  nnoremap <silent> <buffer> [qrpsqlpq]l :call qrpsqlpq#run('vsplit')<CR>
+  nnoremap <silent> <buffer> [qrpsqlpq]r :call qrpsqlpq#run()<CR>
+endfunction
+autocmd FileType sql call s:init_qrpsqlpq()
+```
+
+
 Dependency
 ----
 

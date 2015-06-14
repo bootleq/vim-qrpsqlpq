@@ -96,4 +96,31 @@ function! qrpsqlpq#expanded_output_fold_level(line) "{{{
   endif
 endfunction "}}}
 
+
+function! qrpsqlpq#format_explain_output() "{{{
+  " Show SQL EXPLAIN ANALYZE time as 'time difference'
+  execute '%substitute/' .
+        \ '\v(cost|actual\_s+%(\.\n \.)?time)\=' .
+        \   '(\_[0-9. ]+)' .
+        \   'rows' .
+        \   '\_[^\)]+' .
+        \ '/\=s:explain_time_replacer()' .
+        \ '/ge'
+endfunction "}}}
+
+
+function! s:explain_time_replacer() "{{{
+  let [column, time_expr] = [submatch(1), submatch(2)]
+
+  let column = matchstr(column, '\v\w+')
+  let time_expr  = substitute(time_expr,  '\v\.\n \.', '', '')  " psql might wrap long line with '.\n .'
+  let [begin, end] = split(time_expr, '\V..')
+
+  return printf(
+        \   '%s: %s',
+        \   toupper(column),
+        \   string(str2float(end) - str2float(begin))
+        \ )
+endfunction "}}}
+
 " }}} Utils

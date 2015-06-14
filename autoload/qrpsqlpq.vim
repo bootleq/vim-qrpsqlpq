@@ -96,8 +96,12 @@ function! qrpsqlpq#after_output_syntax(...) "{{{
     syntax match qrpsqlpqExplainActual /\v\(ACTUAL: \d+\.\d+\)/
     syntax match qrpsqlpqExplainCostDigit /\v[0-9.]+/ containedin=qrpsqlpqExplainCost contained
     syntax match qrpsqlpqExplainActualDigit /\v[0-9.]+/ containedin=qrpsqlpqExplainActual contained
+    syntax match qrpsqlpqExplainBottleneck /<< MAX$/
     highlight link qrpsqlpqExplainCostDigit Statement
     highlight link qrpsqlpqExplainActualDigit Identifier
+    highlight link qrpsqlpqExplainBottleneck Error
+
+    call qrpsqlpq#search_bottleneck()
   endif
 endfunction "}}}
 
@@ -123,6 +127,29 @@ function! qrpsqlpq#format_explain_output() "{{{
         \   '\_[^\)]+' .
         \ '/\=s:explain_time_replacer()' .
         \ '/ge'
+endfunction "}}}
+
+
+function! qrpsqlpq#search_bottleneck() "{{{
+  let lines = getline(1, line('$'))
+  let lines = filter(lines, 'v:val =~ ''\v(COST|ACTUAL): \d+\.\d+\)$''')
+  let max = 0.0
+
+  for line in lines
+    let time = str2float(matchstr(line, '\v\zs\d+\.\d+\ze\)$'))
+    if time > max
+      let max = time
+    endif
+  endfor
+
+  if max > 0
+    let pos = searchpos(
+          \   '\v(COST|ACTUAL): ' . string(max) . '\)$',
+          \   'bc'
+          \ )
+    call setpos("''", [''] + pos)
+    normal! A << MAX
+  endif
 endfunction "}}}
 
 

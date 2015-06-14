@@ -55,7 +55,7 @@ g:qrpsqlpq_expanded_format_lines ~
   If set to "-1", never format.
 
 ------------------------------------------------------------------------------
-Configuration examples:                             *qrpsqlpq-config-examples*
+Configuration examples:                                    *qrpsqlpq-examples*
 
 Key mappings, only on "sql" filetype, with:
 

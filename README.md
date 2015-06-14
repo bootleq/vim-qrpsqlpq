@@ -14,8 +14,15 @@ For example: call `qrpsqlpq#run()` on a sql file.
 Features
 ----
 
-- Output `psql` execution result to split/vsplit buffer.
-- Format psql *expanded* output result.
+- Output `psql` execution result in split/vsplit buffer.
+- Format psql *expanded* output result:
+  - Blank lines between records.
+  - Fold each record.
+  - Minor highlights.
+- Format `EXPLAIN` output result:
+  - Convert time display `cost=1.00..5.00` to `COST: 4.00`.
+  - Mark bottleneck entry with `MAX` text.
+  - Minor highlights.
 - Detect Rails development db name by [Rails.vim][rails.vim].
 
 

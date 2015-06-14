@@ -71,10 +71,16 @@ endfunction "}}}
 
 
 function! s:format_expanded_output(context) "{{{
+  let threshold   = get(g:, 'qrpsqlpq_expanded_format_lines', 10000)
+  let input_lines = split(a:context.data, '\n')
+  if threshold < 0 || len(input_lines) > threshold
+    return
+  endif
+
   let lines = []
   let title_pattern = '-\[ RECORD \d\+ \]-[^\n]\+'
 
-  for line in split(a:context.data, '\n')
+  for line in input_lines
     if line =~ title_pattern
       " Add blank line between records
       if line =~ 'RECORD 1 '

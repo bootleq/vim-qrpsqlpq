@@ -44,6 +44,16 @@ b:qrpsqlpq_db_name  (default: none) ~
   If none is set, qrpsqlpq may try detect your Rails development setting with
   rails.vim plugin.
 
+                                            *g:qrpsqlpq_expanded_format_lines*
+g:qrpsqlpq_expanded_format_lines ~
+                    (default: none) ~
+
+  If lines of output result exceeds this number, stop try formatting it for
+  performance.
+
+  If not set, "10000" is used.
+  If set to "-1", never format.
+
 ------------------------------------------------------------------------------
 Configuration examples:                             *qrpsqlpq-config-examples*
 

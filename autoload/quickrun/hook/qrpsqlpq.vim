@@ -71,7 +71,7 @@ endfunction "}}}
 
 
 function! s:format_expanded_output(context) "{{{
-  let threshold   = get(g:, 'qrpsqlpq_expanded_format_lines', 10000)
+  let threshold   = get(g:, 'qrpsqlpq_expanded_format_max_lines', 10000)
   let input_lines = split(a:context.data, '\n')
   if threshold < 0 || len(input_lines) > threshold
     return

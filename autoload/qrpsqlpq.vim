@@ -1,3 +1,12 @@
+" Constants: {{{
+
+let s:OPT_NAMES = {
+      \   'db_name': 'qrpsqlpq_db_name'
+      \ }
+
+" }}} Constants
+
+
 " Main Functions: {{{
 
 function! qrpsqlpq#run(...) "{{{
@@ -43,11 +52,22 @@ endfunction  "}}}
 
 " Utils: {{{
 
+function! qrpsqlpq#conn_info()
+  let db_name_src = exists('b:' . s:OPT_NAMES.db_name) ? ('b:' . s:OPT_NAMES.db_name) :
+                  \ exists('g:' . s:OPT_NAMES.db_name) ? ('g:' . s:OPT_NAMES.db_name) :
+                  \ 'auto-detect'
+
+  return {
+        \   'db_name':     s:get_db_name(),
+        \   'src.db_name': db_name_src
+        \ }
+endfunction
+
 function! s:get_db_name() "{{{
   let name = get(
         \   b:,
-        \   'qrpsqlpq_db_name',
-        \   get(g:, 'qrpsqlpq_db_name', '')
+        \   s:OPT_NAMES.db_name,
+        \   get(g:, s:OPT_NAMES.db_name, '')
         \ )
 
   if empty(name)

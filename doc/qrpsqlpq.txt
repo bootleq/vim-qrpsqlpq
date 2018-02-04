@@ -25,6 +25,19 @@ Connect to database ~
   Set |b:qrpsqlpq_db_name| or |g:qrpsqlpq_db_name|, or qrpsqlpq will try using
   rails.vim detect your development setting.
 
+Inspect connection setting ~
+                                                        *qrpsqlpq#conn_info()*
+  conn_info() returns Dictionary about current connection setting, includes:
+
+        key              meaning         ~
+    ------------    -------------------
+    db_name         name of database
+    src.db_name     how the db_name is determined
+
+    example result: >
+
+      {'db_name': 'postgres', 'src.db_name': 'auto-detect'}
+<
 ==============================================================================
 CONFIGURATION                                         *qrpsqlpq-configuration*
 

@@ -16,7 +16,6 @@ let g:quickrun_config['sql/qrpsqlpq'] = {
       \   'command': 'psql',
       \   'exec': ['%c %o -f %s'],
       \   'outputter/buffer/into': 0,
-      \   'outputter/buffer/name': '[QR] %{expand("%:t")}  \@%{strftime("%T")}',
       \   'hook/qrpsqlpq/enable': 1
       \ }
 

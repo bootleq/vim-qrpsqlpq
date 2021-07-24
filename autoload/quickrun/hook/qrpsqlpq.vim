@@ -24,9 +24,6 @@ endfunction "}}}
 function! s:hook.on_outputter_buffer_opened(session, context) "{{{
   if self.config.enable
     setlocal nonumber nowrap sidescrolloff=0
-
-    " unmap <plug>(quickrun) FIXME: should not involved with this plugin
-    nnoremap <buffer> <Leader>r <Nop>
   endif
 endfunction "}}}
 

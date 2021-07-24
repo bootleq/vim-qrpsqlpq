@@ -4,7 +4,31 @@ let s:OPT_NAMES = {
       \   'db_name': 'qrpsqlpq_db_name'
       \ }
 
+" Detect quickrun feature
+let s:QR_VERSION = 9 " 0.9
+let s:QR_OPENER_OPT = 'opener'
+let s:QR_BUFNAME_OPT = 'bufname'
+try
+  call quickrun#config#normalize('') " >= v0.9.0
+catch /^Vim\%((\a\+)\)\=:E117:/
+  let s:QR_VERSION  = 8
+  let s:QR_OPENER_OPT = 'split'
+  let s:QR_BUFNAME_OPT = 'name'
+endtry
+
+
 " }}} Constants
+
+
+" Default Options: {{{
+
+let cfg = g:quickrun_config['sql/qrpsqlpq']
+let opt_name = printf('outputter/buffer/%s', s:QR_VERSION > 8 ? 'bufname' : 'name')
+if !has_key(cfg, opt_name)
+  let cfg[opt_name] = 'QR> %{expand("%:t")}  \@%{strftime("%T")}'
+endif
+
+" }}} Default Options
 
 
 " Main Functions: {{{
@@ -40,7 +64,7 @@ function! qrpsqlpq#run(...) "{{{
   endif
 
   execute printf(
-        \   "QuickRun -type sql/qrpsqlpq -cmdopt '%s' -outputter/buffer/split '%s' %s",
+        \   "QuickRun -type sql/qrpsqlpq -cmdopt '%s' -outputter/buffer/" . s:QR_OPENER_OPT . " '%s' %s",
         \   cmdopt,
         \   split,
         \   method == 'vsplit' ? '-hook/qrpsqlpq/output_expanded auto' : ''

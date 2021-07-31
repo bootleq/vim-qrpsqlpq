@@ -40,6 +40,14 @@ autocmd FileType sql call s:init_qrpsqlpq()
 ```
 
 
+Database connection
+----
+
+Set `b:qrpsqlpq_db_name` or `g:qrpsqlpq_db_name` for psql `-d dbname` option.
+
+Call `qrpsqlpq#conn_info()` to see current connection info.
+
+
 Dependency
 ----
 

@@ -6,6 +6,7 @@ CONTENTS                                                   *qrpsqlpq-contents*
     Usage  ................................. |qrpsqlpq-usage|
     Configuration  ......................... |qrpsqlpq-configuration|
       General options  ..................... |qrpsqlpq-general-options|
+      QuickRun config  ..................... |qrpsqlpq-quickrun-config|
       Examples ............................. |qrpsqlpq-examples|
 
 ==============================================================================
@@ -68,6 +69,29 @@ g:qrpsqlpq_expanded_format_max_lines ~
   If set to  0, never format.
   If set to -1, always format.
 
+------------------------------------------------------------------------------
+Custom QuickRun config                               *qrpsqlpq-quickrun-config*
+
+This plugin set a config dictionary (named "sql/qrpsqlpq") under
+|g:quickrun_config| dictionary, the defulat is:
+>
+  g:quickrun_config['sql/qrpsqlpq'] = {
+    \ 'command': 'psql',
+    \ 'exec': ['%c %o -f %s'],
+    \ 'outputter/buffer/into': 0,
+    \ 'outputter/buffer/bufname': 'QR> %{expand("%:t")}  \@%{strftime("% T")}',
+    \ 'hook/qrpsqlpq/enable': 1
+    \ }
+  " NOTE this is not exactly the implementation, please see source if needed
+<
+You can customize each item by define them before plugin loading. 
+>
+  " .vimrc
+  let g:quickrun_config['sql/qrpsqlpq'] = {
+      \   'outputter/buffer/into': 1,
+      \   'outputter/buffer/bufname': '省 %{expand("%:t")}',
+      \ }
+<
 ------------------------------------------------------------------------------
 Configuration examples:                                    *qrpsqlpq-examples*
 

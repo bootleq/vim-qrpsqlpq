@@ -20,7 +20,7 @@ endtry
 " }}} Constants
 
 
-" Default Options: {{{
+" Default QuickRun Options: {{{
 
 let cfg = g:quickrun_config['sql/qrpsqlpq']
 let opt_name = printf('outputter/buffer/%s', s:QR_VERSION > 8 ? 'bufname' : 'name')
@@ -28,7 +28,7 @@ if !has_key(cfg, opt_name)
   let cfg[opt_name] = 'QR> %{expand("%:t")}  \@%{strftime("%T")}'
 endif
 
-" }}} Default Options
+" }}} Default QuickRun Options
 
 
 " Main Functions: {{{

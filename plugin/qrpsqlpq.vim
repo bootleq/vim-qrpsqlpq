@@ -12,12 +12,19 @@ if !exists('g:quickrun_config')
   let g:quickrun_config = {}
 endif
 
-let g:quickrun_config['sql/qrpsqlpq'] = {
+if !exists('g:quickrun_config["sql/qrpsqlpq"]')
+  let g:quickrun_config['sql/qrpsqlpq'] = {}
+endif
+
+call extend(
+      \ g:quickrun_config['sql/qrpsqlpq'],
+      \ {
       \   'command': 'psql',
       \   'exec': ['%c %o -f %s'],
       \   'outputter/buffer/into': 0,
       \   'hook/qrpsqlpq/enable': 1
-      \ }
+      \ },
+      \ 'keep')
 
 " }}} Setup
 
